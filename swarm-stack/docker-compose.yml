@@ -1,0 +1,27 @@
+version: '3.9'
+
+secrets:
+  redis-password:
+    external: true
+
+networks:
+  redis-net:
+    external: true
+  nginx-net:
+    external: true
+  
+
+services:
+  redis:
+    image: docker.io/thefnordling/redis:7.2.4
+    secrets:
+      - redis-password
+    volumes:
+      - /opt/redis/:/data/
+    deploy:
+      placement:
+        constraints: [node.hostname == redis]
+  insight:
+    image: redislabs/redisinsight:v2
+    volumes:
+      - /mnt/redis-insight:/db 
